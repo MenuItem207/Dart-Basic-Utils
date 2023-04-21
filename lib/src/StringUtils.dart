@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 ///
@@ -7,11 +6,6 @@ import 'dart:math';
 ///
 class StringUtils {
   static AsciiCodec asciiCodec = AsciiCodec();
-
-  static final RegExp _ipv4Maybe =
-      RegExp(r'^(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)$');
-  static final RegExp _ipv6 =
-      RegExp(r'^::|^::1|^([a-fA-F0-9]{1,4}::?){1,7}([a-fA-F0-9]{1,4})$');
 
   ///
   /// Returns the given string or the default string if the given string is null
@@ -519,25 +513,5 @@ class StringUtils {
       l.add(s);
     }
     return l;
-  }
-
-  ///
-  /// Checks whether the given String [s] is an IPv4 or IPv6 address.
-  ///
-  static bool isIP(String s, {InternetAddressType? ipType}) {
-    if (ipType == null || ipType == InternetAddressType.any) {
-      return isIP(s, ipType: InternetAddressType.IPv4) ||
-          isIP(s, ipType: InternetAddressType.IPv6);
-    } else if (ipType == InternetAddressType.IPv4) {
-      if (!_ipv4Maybe.hasMatch(s)) {
-        return false;
-      }
-      var parts = s.split('.');
-      parts.sort((a, b) => int.parse(a) - int.parse(b));
-      return int.parse(parts[3]) <= 255;
-    } else if (ipType == InternetAddressType.IPv6) {
-      return _ipv6.hasMatch(s);
-    }
-    return false;
   }
 }
